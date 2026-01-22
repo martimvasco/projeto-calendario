@@ -1,0 +1,41 @@
+@startuml
+
+class User {
+  - id : int
+  - nome : string
+  - email : string
+  - password : string
+  - perfil : string
+}
+
+class Category {
+  - id : int
+  - nome : string
+  - descricao : string
+}
+
+class Event {
+  - id : int
+  - titulo : string
+  - descricao : string
+  - data_inicio : datetime
+  - data_fim : datetime
+  - prioridade : string
+  + validar_datas() : bool
+}
+
+class CalendarManager {
+  + adicionar_evento(e : Event)
+  + remover_evento(id : int)
+  + verificar_sobreposicao(e : Event) : bool
+  + carregar_dados()
+  + guardar_dados()
+}
+
+User "1" -- "0..*" Event
+Event "1" -- "1" Category
+CalendarManager --> User
+CalendarManager --> Event
+CalendarManager --> Category
+
+@enduml

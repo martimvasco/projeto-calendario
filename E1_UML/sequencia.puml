@@ -1,0 +1,15 @@
+@startuml
+actor Utilizador
+participant "Browser" as B
+participant "Flask App" as F
+participant "CalendarManager" as CM
+participant "Event" as E
+
+Utilizador -> B : Submete formulário
+B -> F : POST /adicionar
+F -> CM : adicionar_evento()
+CM -> E : criar evento
+CM --> F : evento adicionado
+F --> B : redirect "/"
+B --> Utilizador : Página atualizada
+@enduml

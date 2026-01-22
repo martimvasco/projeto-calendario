@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Projeto Calendário</title>
+</head>
+<body>
+
+<h1>Projeto Calendário</h1>
+
+<h2>Eventos</h2>
+
+{% if eventos %}
+    <ul>
+    {% for e in eventos %}
+        <li>
+            <strong>{{ e.titulo }}</strong> —
+            {{ e.data_inicio }} → {{ e.data_fim }}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Não existem eventos.</p>
+{% endif %}
+
+<hr>
+
+<h2>Adicionar evento</h2>
+
+<form method="POST" action="/adicionar">
+    <input type="text" name="titulo" placeholder="Título" required><br><br>
+    <input type="text" name="descricao" placeholder="Descrição" required><br><br>
+
+    <label>Data início:</label><br>
+    <input type="datetime-local" name="data_inicio" required><br><br>
+
+    <label>Data fim:</label><br>
+    <input type="datetime-local" name="data_fim" required><br><br>
+
+    <select name="prioridade">
+        <option value="Baixa">Baixa</option>
+        <option value="Média">Média</option>
+        <option value="Alta">Alta</option>
+    </select><br><br>
+
+    <button type="submit">Adicionar</button>
+</form>
+
+</body>
+</html>
