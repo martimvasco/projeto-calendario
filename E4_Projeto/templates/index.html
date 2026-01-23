@@ -3,48 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <title>Projeto Calendário</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<h1>Projeto Calendário</h1>
+<div class="page">
 
-<h2>Eventos</h2>
+    <header class="header">
+        <h1>📅 Projeto Calendário</h1>
+        <p>Gestão de eventos Martim Vasco</p>
+    </header>
 
-{% if eventos %}
-    <ul>
-    {% for e in eventos %}
-        <li>
-            <strong>{{ e.titulo }}</strong> —
-            {{ e.data_inicio }} → {{ e.data_fim }}
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>Não existem eventos.</p>
-{% endif %}
+    <section class="card">
+        <h2>Eventos</h2>
 
-<hr>
+        {% if eventos %}
+            {% for e in eventos %}
+                <div class="event">
+                    <div class="event-info">
+                        <h3>{{ e.titulo }}</h3>
+                        <p class="date">{{ e.data_inicio }} → {{ e.data_fim }}</p>
+                        <span class="badge">{{ e.prioridade }}</span>
+                    </div>
 
-<h2>Adicionar evento</h2>
+                    <div class="event-actions">
+                        <a href="{{ url_for('editar', evento_id=e.id) }}" class="btn small">Editar</a>
 
-<form method="POST" action="/adicionar">
-    <input type="text" name="titulo" placeholder="Título" required><br><br>
-    <input type="text" name="descricao" placeholder="Descrição" required><br><br>
+                        <form action="{{ url_for('remover', evento_id=e.id) }}" method="POST">
+                            <button type="submit" class="btn small danger">Remover</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">Não existem eventos.</p>
+        {% endif %}
+    </section>
 
-    <label>Data início:</label><br>
-    <input type="datetime-local" name="data_inicio" required><br><br>
+    <section class="card">
+        <h2>
+            {% if evento_editar %}
+                Editar evento
+            {% else %}
+                Adicionar evento
+            {% endif %}
+        </h2>
 
-    <label>Data fim:</label><br>
-    <input type="datetime-local" name="data_fim" required><br><br>
+        <form method="POST"
+              action="{% if evento_editar %}{{ url_for('editar', evento_id=evento_editar.id) }}{% else %}/{% endif %}">
 
-    <select name="prioridade">
-        <option value="Baixa">Baixa</option>
-        <option value="Média">Média</option>
-        <option value="Alta">Alta</option>
-    </select><br><br>
+            <input type="text" name="titulo" placeholder="Título"
+                   value="{{ evento_editar.titulo if evento_editar }}" required>
 
-    <button type="submit">Adicionar</button>
-</form>
+            <input type="text" name="descricao" placeholder="Descrição"
+                   value="{{ evento_editar.descricao if evento_editar }}">
+
+            <div class="grid">
+                <input type="datetime-local" name="data_inicio"
+                       value="{{ evento_editar.data_inicio if evento_editar }}" required>
+
+                <input type="datetime-local" name="data_fim"
+                       value="{{ evento_editar.data_fim if evento_editar }}" required>
+            </div>
+
+            <select name="prioridade">
+                {% for p in ["Baixa", "Média", "Alta"] %}
+                    <option value="{{ p }}"
+                        {% if evento_editar and evento_editar.prioridade == p %}selected{% endif %}>
+                        {{ p }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">
+                {% if evento_editar %}
+                    Guardar alterações
+                {% else %}
+                    Adicionar evento
+                {% endif %}
+            </button>
+        </form>
+    </section>
+
+</div>
 
 </body>
 </html>
