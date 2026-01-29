@@ -11,3 +11,4 @@ Sistema de gestão de calendário pessoal desenvolvido em Python, usando POO e p
 ## Estrutura
 - E1_UML/ → diagramas UML
 - E4_Projeto/ → código fonte
+- E5_Slides/ → apresentação 
